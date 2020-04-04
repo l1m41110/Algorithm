@@ -6,19 +6,37 @@ public class ProducerConsumer {
     private static int count;
 
     static class Producer {
-
         void produce() {
-            while (isFull(buffer)) {
+//            while (isFull(buffer)) {}
+            synchronized (lock) {
+                if (isFull(buffer)) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                buffer[count++] = 1;
+                lock.notify();
             }
-            buffer[count++] = 1;
         }
     }
 
+
     static class Consumer {
         void consume() {
-            while (isEmpty()) {
+//            while (isEmpty()) {}
+            synchronized (lock) {
+                if (isEmpty()) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                buffer[--count] = 0;
+                lock.notify();
             }
-            buffer[--count] = 0;
         }
     }
 
@@ -30,9 +48,7 @@ public class ProducerConsumer {
         return count == buffer.length;
     }
 
-
     public static void main(String... strings) throws InterruptedException {
-
         buffer = new int[10];
         count = 0;
 
@@ -45,6 +61,7 @@ public class ProducerConsumer {
             }
             System.out.println("Done producing");
         };
+
         Runnable consumeTask = () -> {
             for (int i = 0; i < 45; i++) {
                 consumer.consume();
