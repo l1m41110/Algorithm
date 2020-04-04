@@ -57,13 +57,15 @@ class LongWrapper {
     }
 
     public long getNumber() {
-        return number;
+        synchronized (key) {
+            return number;
+        }
     }
 
     public void incrementNumber() {
 //        number = number + 1; //RACE CONDITION OPERATION FROM DIFFERENT THREADS: read value when increment and copy to the same field
 
-        //fix race condition
+//        fix race condition(one core cpu only)
         synchronized (key) {
             number = number + 1;
         }
