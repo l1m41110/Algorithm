@@ -2,7 +2,7 @@ package com.concurrency.multithreading;
 
 public class Singleton {
     private static final Object key = new Object();
-    private static Singleton instance;
+    private static volatile Singleton instance;
 
     private Singleton() {
     }
@@ -47,6 +47,11 @@ public class Singleton {
     - this bug is not visible in a single core CPU
     - this visibility issue is just on multicore CPU: because of difference caches on each core of the CPU
 
-    SOLUTION 3: non-synchronized / volatile read
-    
+    SOLUTION 3: non-synchronized / volatile read / enum in java for singleton
+    - enum to Singleton --> forget about first singleton pattern
+    public enum Singleton{
+        INSTANCE
+    }
+
+    !!!! COMPARATOR interface it uses enum singleton pattern !!!!
  */
