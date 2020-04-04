@@ -1,17 +1,23 @@
 package com.concurrency.multithreading;
 
 public class Singleton {
-
+    private static final Object key = new Object();
     private static Singleton instance;
 
     private Singleton() {
     }
 
-    public static synchronized Singleton getInstance() {
-        if (instance == null) {
-            instance = new Singleton();
+    public static Singleton getInstance() {
+        if (instance != null) {
+            return instance;
         }
-        return instance;
+
+        synchronized (key) {
+            if (instance == null) {
+                instance = new Singleton();
+            }
+            return instance;
+        }
     }
 
 }
@@ -37,5 +43,10 @@ public class Singleton {
     SOLUTION 2: once instance has been initialized, allow its reading in parallel
     - fix the race condition for multithread: double check locking singleton pattern: remove synchronized
     - this pattern is bugged!
-    -
+    - because there is no happens before link between the read returning the value and the write that sets it
+    - this bug is not visible in a single core CPU
+    - this visibility issue is just on multicore CPU: because of difference caches on each core of the CPU
+
+    SOLUTION 3: non-synchronized / volatile read
+    
  */
