@@ -59,3 +59,20 @@ public class Worker extends Thread {
     }
 
 }
+
+/*
+    How to write correct concurrent code?
+    - Check for race conditions
+    - They occur on fields (not variables, inside methods/parameters)
+    - more than 1 thread trying to read/write: race condition
+
+    - Check for the happens-before link )between read and write operations
+    - Are the read/write volatile?
+    - Are they synchronized?
+    - If not, there is a probably bug
+
+    - Synchronized or volatile?
+    - no simple answer
+    - do I need atomicity in a certain portion of code that should not be interrupted: then need synchronized
+    - if not, volatile = visibility is enough
+ */
